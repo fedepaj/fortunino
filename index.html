@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fortunino</title>
+<meta name="description" content="La tua fortuna, dal biscotto che pensa.">
+<meta name="theme-color" content="#ffe7c2">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥠</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg1: #fff6e8;
+    --bg2: #ffd9a3;
+    --paper: #fffdf8;
+    --paper-edge: #efe4cf;
+    --ink: #a3161a;
+    --text: #4a2f18;
+    --muted: #8a6a48;
+    --ball: #fffdf8;
+    --shadow: rgba(120, 70, 20, .22);
+    --btn: rgba(255, 253, 248, .6);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg1: #1c120a;
+      --bg2: #3b2413;
+      --paper: #f7efdf;
+      --paper-edge: #d9ccb2;
+      --ink: #9c1a1a;
+      --text: #f3e2c9;
+      --muted: #c9a57c;
+      --ball: #f7efdf;
+      --shadow: rgba(0, 0, 0, .5);
+      --btn: rgba(255, 236, 210, .1);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg1: #1c120a; --bg2: #3b2413; --paper: #f7efdf; --paper-edge: #d9ccb2; --ink: #9c1a1a;
+    --text: #f3e2c9; --muted: #c9a57c; --ball: #f7efdf; --shadow: rgba(0, 0, 0, .5); --btn: rgba(255, 236, 210, .1);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: radial-gradient(120% 80% at 50% 0%, var(--bg1) 0%, var(--bg2) 100%);
+    background-color: var(--bg1);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: max(24px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    overflow-x: hidden;
+  }
+  main { width: 100%; max-width: 440px; display: flex; flex-direction: column; align-items: center; }
+
+  /* the cookie: the emoji itself, cut in two halves that open */
+  .cookie { position: relative; width: 150px; height: 130px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .half {
+    position: absolute; inset: 0;
+    font-size: 118px; line-height: 130px; text-align: center;
+    filter: drop-shadow(0 8px 10px var(--shadow));
+    transition: transform .9s cubic-bezier(.2, .9, .25, 1.2);
+  }
+  .half.l { clip-path: inset(0 50% 0 0); }
+  .half.r { clip-path: inset(0 0 0 50%); }
+  .open .half.l { transform: translate(-34px, 6px) rotate(-16deg); }
+  .open .half.r { transform: translate(34px, 6px) rotate(16deg); }
+  .crumb {
+    position: absolute; left: 50%; top: 62%; width: 7px; height: 5px; border-radius: 3px;
+    background: #d9973f; opacity: 0;
+  }
+  .open .crumb { animation: crumb 1s ease-out forwards; }
+  @keyframes crumb {
+    0% { opacity: 1; transform: translate(0, 0) rotate(0); }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(200deg); }
+  }
+
+  /* the slip of paper, unrolling out of the crack */
+  .slip {
+    position: relative;
+    width: 100%;
+    margin-top: -22px;
+    padding: 26px 26px 22px;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(160, 120, 60, .035) 3px 4px),
+      var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 3px;
+    box-shadow: 0 14px 30px -12px var(--shadow), 0 2px 0 var(--paper-edge);
+    transform: rotate(-1.6deg) scaleX(.08);
+    transform-origin: 50% 0;
+    opacity: 0;
+    transition: transform .8s cubic-bezier(.2, .9, .25, 1) .45s, opacity .3s ease .45s;
+  }
+  .open .slip, .slip.shown { transform: rotate(-1.6deg) scaleX(1); opacity: 1; }
+  .fortune {
+    margin: 0;
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
+    font-size: clamp(21px, 6vw, 26px);
+    line-height: 1.32;
+    font-weight: 400;
+    color: var(--ink);
+    text-align: center;
+    text-wrap: balance;
+    font-variation-settings: "SOFT" 60;
+  }
+  .lucky { margin-top: 18px; text-align: center; }
+  .lucky h2 {
+    margin: 0 0 9px; font-size: 11px; font-weight: 600; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .balls { display: flex; justify-content: center; gap: 7px; flex-wrap: wrap; }
+  .ball {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--ball); color: var(--ink);
+    border: 1.5px solid var(--ink);
+    font: 600 14px/1 ui-rounded, system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+    opacity: 0; transform: scale(.4);
+  }
+  .open .ball, .shown .ball { animation: pop .45s cubic-bezier(.3, 1.6, .5, 1) forwards; animation-delay: calc(1.05s + var(--i) * 90ms); }
+  @keyframes pop { to { opacity: 1; transform: scale(1); } }
+
+  .actions { margin-top: 30px; display: flex; gap: 10px; opacity: 0; transition: opacity .5s ease 1.7s; }
+  .open .actions { opacity: 1; }
+  button {
+    font: 600 15px/1 system-ui, -apple-system, sans-serif;
+    color: var(--text);
+    background: var(--btn);
+    border: 1px solid color-mix(in srgb, var(--muted) 45%, transparent);
+    border-radius: 999px;
+    padding: 12px 20px;
+    min-height: 44px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:active { transform: scale(.97); }
+  .empty { margin-top: 26px; font-size: 18px; line-height: 1.45; text-align: center; color: var(--muted); max-width: 300px; }
+  footer { margin-top: 36px; font-size: 12px; color: var(--muted); letter-spacing: .02em; text-align: center; }
+  footer b { font-weight: 600; color: var(--text); }
+  [hidden] { display: none !important; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .half, .slip, .actions { transition: none; }
+    .open .ball, .shown .ball { animation: none; opacity: 1; transform: none; }
+    .open .crumb { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main id="app">
+  <div class="cookie" id="cookie" role="button" aria-label="Fortunino">
+    <div class="half l" aria-hidden="true">🥠</div>
+    <div class="half r" aria-hidden="true">🥠</div>
+  </div>
+  <section class="slip" id="slip" hidden>
+    <p class="fortune" id="fortune"></p>
+    <div class="lucky">
+      <h2 id="luckyLabel"></h2>
+      <div class="balls" id="balls"></div>
+    </div>
+  </section>
+  <div class="actions" id="actions" hidden>
+    <button id="share" type="button"></button>
+  </div>
+  <p class="empty" id="empty" hidden></p>
+  <footer id="footer"></footer>
+</main>
+<script>
+  const WORDS = {
+    it: { lucky: "Numeri fortunati", share: "Condividi", copied: "Copiata!",
+          empty: "Avvicina il telefono a Fortunino: ha una fortuna per te.",
+          footer: "<b>Fortunino</b> · scritta da un biscotto che pensa" },
+    en: { lucky: "Lucky numbers", share: "Share", copied: "Copied!",
+          empty: "Hold your phone near Fortunino: it has a fortune for you.",
+          footer: "<b>Fortunino</b> · written by a cookie that thinks" },
+  };
+
+  // the link is https://fedepaj.github.io/fortunino/#<lang>/<fortune, + for spaces, %XX for the rest>
+  function read() {
+    const h = location.hash.slice(1);
+    const m = h.match(/^([a-z]{2})\/(.*)$/s);
+    if (!m) return null;
+    try {
+      const text = decodeURIComponent(m[2].replace(/\+/g, " ")).trim();
+      return text ? { lang: m[1], text } : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // the same six numbers the cookie prints: FNV-1a of the text, then xorshift32 (FortuninoApp.h)
+  function lucky(text) {
+    let h = 2166136261 >>> 0;
+    for (const b of new TextEncoder().encode(text)) h = Math.imul(h ^ b, 16777619) >>> 0;
+    const num = [];
+    while (num.length < 6) {
+      h = (h ^ (h << 13)) >>> 0;
+      h = (h ^ (h >>> 17)) >>> 0;
+      h = (h ^ (h << 5)) >>> 0;
+      const v = 1 + (h % 49);
+      if (!num.includes(v)) num.push(v);
+    }
+    return num.sort((a, b) => a - b);
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const got = read();
+  const lang = got && WORDS[got.lang] ? got.lang : (navigator.language || "en").slice(0, 2) === "it" ? "it" : "en";
+  const W = WORDS[lang];
+  document.documentElement.lang = lang;
+  $("footer").innerHTML = W.footer;
+
+  function crumbs() {
+    const c = $("cookie");
+    c.querySelectorAll(".crumb").forEach((e) => e.remove());
+    for (let i = 0; i < 9; i++) {
+      const e = document.createElement("i");
+      e.className = "crumb";
+      const a = Math.PI * (1.1 + Math.random() * 0.8);
+      const r = 40 + Math.random() * 50;
+      e.style.setProperty("--dx", `${Math.cos(a) * r}px`);
+      e.style.setProperty("--dy", `${-Math.sin(a) * r + 60}px`);
+      c.appendChild(e);
+    }
+  }
+
+  function crack() {
+    const app = $("app");
+    app.classList.remove("open");
+    void app.offsetWidth;          // restart the animations
+    crumbs();
+    app.classList.add("open");
+    if (navigator.vibrate) navigator.vibrate(18);
+  }
+
+  if (got) {
+    const nums = lucky(got.text);
+    document.title = `Fortunino · ${got.text}`;
+    $("fortune").textContent = got.text;
+    $("luckyLabel").textContent = W.lucky;
+    $("balls").innerHTML = nums.map((n, i) => `<span class="ball" style="--i:${i}">${n}</span>`).join("");
+    $("slip").hidden = false;
+    $("actions").hidden = false;
+    $("share").textContent = W.share;
+    $("share").addEventListener("click", async () => {
+      const text = `🥠 ${got.text}\n${W.lucky}: ${nums.join(" ")}`;
+      try {
+        if (navigator.share) await navigator.share({ text, url: location.href });
+        else {
+          await navigator.clipboard.writeText(`${text}\n${location.href}`);
+          $("share").textContent = W.copied;
+          setTimeout(() => ($("share").textContent = W.share), 1600);
+        }
+      } catch (e) { /* the user closed the share sheet */ }
+    });
+    $("cookie").addEventListener("click", crack);
+    requestAnimationFrame(() => setTimeout(crack, 250));
+  } else {
+    $("empty").textContent = W.empty;
+    $("empty").hidden = false;
+    $("cookie").addEventListener("click", () => {
+      const c = $("cookie");
+      c.animate([{ transform: "rotate(0)" }, { transform: "rotate(-8deg)" }, { transform: "rotate(8deg)" }, { transform: "rotate(0)" }],
+                { duration: 420, easing: "ease-in-out" });
+    });
+  }
+  window.addEventListener("hashchange", () => location.reload());
+</script>
+</body>
+</html>
