@@ -1,0 +1,39 @@
+[submodule "firmware"]
+	path = firmware
+	url = ./firmware
+[submodule "brain"]
+	path = brain
+	url = ./brain
+[submodule "experiments/distill-gemma"]
+	path = experiments/distill-gemma
+	url = ./experiments/distill-gemma
+[submodule "experiments/maestro-qwen"]
+	path = experiments/maestro-qwen
+	url = ./experiments/maestro-qwen
+[submodule "enclosure/v1"]
+	path = enclosure/v1
+	url = ./enclosure/v1
+[submodule "enclosure/v2"]
+	path = enclosure/v2
+	url = ./enclosure/v2
+[submodule "enclosure/v3_lowpoly"]
+	path = enclosure/v3_lowpoly
+	url = ./enclosure/v3_lowpoly
+[submodule "enclosure/v4_lying"]
+	path = enclosure/v4_lying
+	url = ./enclosure/v4_lying
+[submodule "enclosure/v5_cookie"]
+	path = enclosure/v5_cookie
+	url = ./enclosure/v5_cookie
+[submodule "enclosure/v6_figurine"]
+	path = enclosure/v6_figurine
+	url = ./enclosure/v6_figurine
+[submodule "enclosure/v7_figurine"]
+	path = enclosure/v7_figurine
+	url = ./enclosure/v7_figurine
+[submodule "enclosure/ragnar"]
+	path = enclosure/ragnar
+	url = ./enclosure/ragnar
+[submodule "pages"]
+	path = pages
+	url = https://github.com/fedepaj/fortunino.git
