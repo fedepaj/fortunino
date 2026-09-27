@@ -12,15 +12,15 @@ Nano R4 ──Qwiic── Modulino NFC Tag (ST25DV16KC) ──Qwiic── Moduli
 Questa cartella è la repo ombrello: ogni sottocartella qui sotto è una repo git a sé, agganciata
 come submodule (`git submodule status` mostra la versione di ognuna).
 
-| Repo | Contenuto |
-|---|---|
-| [firmware/](firmware/) | libreria Arduino `Fortunino`, sketch EN / IT / benchmark, simulatore delle facce |
-| [brain/](brain/) | il modello (PyTorch), l'addestramento, l'export in header C per il firmware |
-| [experiments/distill-gemma/](experiments/distill-gemma/) | corpus distillato da gemma3 (Ollama) e i modelli EN / IT addestrati su di esso |
-| [experiments/maestro-qwen/](experiments/maestro-qwen/) | addestramento con Qwen3.6 come supervisore, i suoi round e i giudizi |
-| [enclosure/v1](enclosure/v1/) … [v7_figurine](enclosure/v7_figurine/) | le versioni del case (OpenSCAD, Python) |
-| [enclosure/ragnar/](enclosure/ragnar/) | prompt per il tool text-to-CAD Ragnar |
-| [pages/](pages/) | la pagina che il telefono apre dal tag (GitHub Pages, `fedepaj/fortunino`) |
+| Repo | GitHub | Contenuto |
+|---|---|---|
+| [firmware/](firmware/) | `fedepaj/fortunino-firmware` | libreria Arduino `Fortunino`, sketch EN / IT / benchmark, simulatore delle facce |
+| [brain/](brain/) | `fedepaj/fortunino-brain` | il modello (PyTorch), addestramento, export in header C; `corpus/` (massime e negativi di Qwen3.6); `experiments/` (un esperimento per cartella) |
+| [enclosure/](enclosure/) | `fedepaj/fortunino-enclosure` | le versioni del case, `v1/` … `v7_figurine/`, e `ragnar/` (prompt text-to-CAD) |
+| [pages/](pages/) | `fedepaj/fortunino` (pubblica) | la pagina che il telefono apre dal tag (GitHub Pages) |
+
+Clonare tutto: `git clone --recurse-submodules <repo ombrello>`, oppure `git submodule update --init`
+dentro una copia già clonata.
 
 Fuori dalle repo:
 
@@ -31,15 +31,15 @@ Fuori dalle repo:
 ## Come si collegano
 
 ```
-experiments/distill-gemma/runs/<lang>  ──brain/export.py──►  firmware/libraries/Fortunino/src/model_<lang>.h
-                                                               └─► firmware/sketches/fortunino_<lang>  ──►  Nano R4
-experiments/maestro-qwen/inputs/<lang>  (copia congelata di distill-gemma/runs/<lang> e del suo corpus)
-experiments/maestro-qwen/champions/<lang>  ──brain/export.py──►  (stesso header, quando lo si sceglie)
+brain/corpus/raw/<lang>  ──►  brain/corpus/data/<lang>/vN  (versioni congelate)  ──►  brain/experiments/<nome>
+brain/experiments/distill-gemma/runs/<lang>  ──brain/export.py──►  firmware/libraries/Fortunino/src/model_<lang>.h
+                                                                     └─► firmware/sketches/fortunino_<lang>  ──►  Nano R4
+brain/experiments/maestro-qwen/champions/<lang>  ──brain/export.py──►  (stesso header, quando lo si sceglie)
 firmware (tag NFC)  ──►  https://fedepaj.github.io/fortunino/#<lang>/<massima>  (pages/)
 ```
 
 Gli header `model_en.h` e `model_it.h` nel firmware sono l'export di
-`experiments/distill-gemma/runs/en` e `runs/it`.
+`brain/experiments/distill-gemma/runs/en` e `runs/it`.
 
 ## Ambiente
 

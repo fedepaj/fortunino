@@ -11,3 +11,4 @@ shapely==2.1.2
 rtree==1.4.1
 networkx==3.7
 playwright==1.63.0
+pyobjc-framework-Cocoa==12.2.2
