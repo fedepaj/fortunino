@@ -4,9 +4,6 @@
 [submodule "brain"]
 	path = brain
 	url = https://github.com/fedepaj/fortunino-brain.git
-[submodule "pages"]
-	path = pages
-	url = https://github.com/fedepaj/fortunino.git
 [submodule "enclosure"]
 	path = enclosure
 	url = https://github.com/fedepaj/fortunino-enclosure.git
