@@ -60,10 +60,10 @@ e giudicate da Qwen3.6 35B, distillati da un teacher da 4,8M parametri e poi mig
 modello esattamente come gira sulla scheda, a varietà fissata. Sulle massime che la scheda consegna
 il giudice Qwen approva:
 
-| | Modello precedente | Modello attuale | Temperatura |
+| | Precedente, t 0,8 | Attuale, t 0,8 | Attuale, alla temperatura della scheda |
 |---|---|---|---|
-| italiano | 42% | 83% | 0,6 |
-| inglese | 54% | 58% | 0,8 |
+| italiano | 42% | 69% | 83% (t 0,6) |
+| inglese | 54% | 58% | 58% (t 0,8) |
 
 In una prova alla cieca, per ciascuna lingua, il modello attuale è stato preferito agli altri
 candidati. L'inglese scrive massime di lunghezza variabile. La ricetta passo per passo è in
