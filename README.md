@@ -55,12 +55,19 @@ brain/corpus  ──►  brain/experiments  ──brain/export.py──►  firm
 
 ## Il cervello
 
-Il modello italiano del firmware è uno studente int4 a 6 layer: addestrato su 35K massime scritte e
-giudicate da Qwen3.6 35B, distillato da un teacher da 4,8M parametri, poi migliorato con GRPO sul
-modello esattamente come gira sulla scheda, a varietà fissata. Campiona a temperatura 0,6. Sulle
-massime che la scheda consegna, il giudice Qwen ne approva l'83% (il modello precedente il 42%); in
-una prova alla cieca è stato preferito agli altri candidati. La ricetta passo per passo è in
-[brain/](brain/README.md); il modello inglese è quello precedente, in attesa del corpus inglese.
+I modelli del firmware sono studenti int4 a 6 layer (242K parametri), addestrati su massime scritte
+e giudicate da Qwen3.6 35B, distillati da un teacher da 4,8M parametri e poi migliorati con GRPO sul
+modello esattamente come gira sulla scheda, a varietà fissata. Sulle massime che la scheda consegna
+il giudice Qwen approva:
+
+| | Modello precedente | Modello attuale | Temperatura |
+|---|---|---|---|
+| italiano | 42% | 83% | 0,6 |
+| inglese | 54% | 58% | 0,8 |
+
+In una prova alla cieca, per ciascuna lingua, il modello attuale è stato preferito agli altri
+candidati. L'inglese scrive massime di lunghezza variabile. La ricetta passo per passo è in
+[brain/](brain/README.md).
 
 ## Clonare e preparare l'ambiente
 
